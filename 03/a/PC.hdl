@@ -16,5 +16,9 @@ CHIP PC {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
-}
+        Mux16(a=prevOut, b=in, sel=load, out=prev);
+        Or(a=reset, b=load, out=resetOrLoad);
+        Or(a=inc, b=resetOrLoad, out=change);
+        ALU(x=prev, y[0]=inc, y[1..15]=false, zx=reset, nx=false, zy=resetOrLoad, ny=false, f=true, no=false, out=nextVal, zr=d1, ng=d2);
+        Register(in=nextVal, load=change, out=prevOut, out=out);
+}   
